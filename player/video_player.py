@@ -76,10 +76,10 @@ class VideoPlayer:
                 return False
             
             # Get video properties
-            self.total_frames = int(self.cap.get(cv2.CAP_PROP_FRAME_COUNT))
-            self.fps = self.cap.get(cv2.CAP_PROP_FPS)
-            self.frame_width = int(self.cap.get(cv2.CAP_PROP_FRAME_WIDTH))
-            self.frame_height = int(self.cap.get(cv2.CAP_PROP_FRAME_HEIGHT))
+            self.total_frames = int(self.video_cap.get(cv2.CAP_PROP_FRAME_COUNT))
+            self.fps = self.video_cap.get(cv2.CAP_PROP_FPS)
+            self.frame_width = int(self.video_cap.get(cv2.CAP_PROP_FRAME_WIDTH))
+            self.frame_height = int(self.video_cap.get(cv2.CAP_PROP_FRAME_HEIGHT))
             
             if self.fps > 0:
                 self.duration = self.total_frames / self.fps
@@ -181,7 +181,7 @@ class VideoPlayer:
     
     def seek_to(self, position):
         """Seek to specific position in seconds"""
-        if not self.is_loaded or not self.cap:
+        if not self.is_loaded_state or not self.video_cap:
             return False
         
         try:
@@ -222,7 +222,7 @@ class VideoPlayer:
                 frame_start_time = time.time()
                 
                 # Read next frame
-                ret, frame = self.cap.read()
+                ret, frame = self.video_cap.read()
                 
                 if not ret:
                     # End of video
@@ -241,7 +241,7 @@ class VideoPlayer:
                         break
                 
                 # Update current position
-                current_frame_number = self.cap.get(cv2.CAP_PROP_POS_FRAMES)
+                current_frame_number = self.video_cap.get(cv2.CAP_PROP_POS_FRAMES)
                 self.current_position = current_frame_number / self.fps if self.fps > 0 else 0
                 
                 # Display frame
@@ -286,11 +286,11 @@ class VideoPlayer:
     
     def _load_current_frame(self):
         """Load and display current frame"""
-        if not self.cap:
+        if not self.video_cap:
             return False
         
         try:
-            ret, frame = self.cap.read()
+            ret, frame = self.video_cap.read()
             
             if ret:
                 self._display_frame(frame)
@@ -459,9 +459,9 @@ class VideoPlayer:
         try:
             self.stop()
             
-            if self.cap:
-                self.cap.release()
-                self.cap = None
+            if self.video_cap:
+                self.video_cap.release()
+                self.video_cap = None
             
             self.is_loaded_state = False
             self.current_frame = None
