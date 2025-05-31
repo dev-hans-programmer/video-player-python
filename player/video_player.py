@@ -22,9 +22,9 @@ class VideoPlayer:
         self.logger = Logger.get_logger()
         
         # Video state
-        self.cap = None
+        self.video_cap = None
         self.current_frame = None
-        self.is_loaded = False
+        self.video_loaded = False
         self.is_playing_state = False
         self.is_paused = False
         self.current_position = 0
@@ -36,7 +36,7 @@ class VideoPlayer:
         
         # Audio state (simplified - OpenCV doesn't handle audio well)
         self.volume = self.settings.getint('player', 'default_volume', 70)
-        self.is_muted = False
+        self.muted = False
         self.previous_volume = self.volume
         
         # Threading
@@ -68,9 +68,9 @@ class VideoPlayer:
                 return False
             
             # Open video capture
-            self.cap = cv2.VideoCapture(str(file_path))
+            self.video_cap = cv2.VideoCapture(str(file_path))
             
-            if not self.cap.isOpened():
+            if not self.video_cap.isOpened():
                 self.logger.error(f"Failed to open video file: {file_path}")
                 return False
             
@@ -409,12 +409,12 @@ class VideoPlayer:
     
     def is_muted(self):
         """Check if muted"""
-        return self.is_muted
+        return self.muted
     
     # State query methods
     def is_loaded(self):
         """Check if video is loaded"""
-        return self.is_loaded
+        return self.video_loaded
     
     def is_playing(self):
         """Check if video is playing"""
