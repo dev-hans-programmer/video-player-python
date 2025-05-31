@@ -25,6 +25,7 @@ class VideoPlayer:
         self.video_cap = None
         self.current_frame = None
         self.video_loaded = False
+        self.is_loaded_state = False
         self.is_playing_state = False
         self.is_paused = False
         self.current_position = 0
