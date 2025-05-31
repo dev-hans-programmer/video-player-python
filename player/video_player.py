@@ -87,7 +87,7 @@ class VideoPlayer:
             
             # Reset state
             self.current_position = 0
-            self.is_loaded = True
+            self.is_loaded_state = True
             self.is_playing_state = False
             self.is_paused = False
             
@@ -167,7 +167,7 @@ class VideoPlayer:
                     self.playback_thread.join(timeout=1.0)
                 
                 # Reset to beginning
-                if self.is_loaded:
+                if self.is_loaded_state:
                     self.seek_to(0)
                 
                 if self.on_state_changed:
@@ -407,14 +407,14 @@ class VideoPlayer:
             self.previous_volume = self.volume
             self.volume = 0
     
-    def is_muted(self):
+    def is_muted_state(self):
         """Check if muted"""
-        return self.muted
+        return self.is_muted
     
     # State query methods
     def is_loaded(self):
         """Check if video is loaded"""
-        return self.video_loaded
+        return self.is_loaded_state
     
     def is_playing(self):
         """Check if video is playing"""
@@ -462,7 +462,7 @@ class VideoPlayer:
                 self.cap.release()
                 self.cap = None
             
-            self.is_loaded = False
+            self.is_loaded_state = False
             self.current_frame = None
             self.display_image = None
             
